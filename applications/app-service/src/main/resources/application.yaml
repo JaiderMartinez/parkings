@@ -1,0 +1,25 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: "parking"
+  devtools:
+    add-properties: false
+  r2dbc:
+    name: parking
+    username: root
+    password: 12345678
+    url: r2dbc:postgresql://parking.ciusywni3ifc.us-east-1.rds.amazonaws.com:5432/parking?sslmode=require
+  profiles:
+    include: null
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
