@@ -26,7 +26,6 @@ public class ErrorController {
 
     @ExceptionHandler({Exception.class, MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ErrorResponse> handleAllExceptions(Exception e, HandlerMethod handlerMethod) {
-        log.info("Error message : {} class name : {}", e.getMessage(), e.getClass().getSimpleName());
         ErrorResponse errorResponse = new ErrorResponse();
         String exceptionName = e.getClass().getSimpleName();
         Error error = STATUS_CODES.get(exceptionName);
@@ -36,10 +35,23 @@ public class ErrorController {
         //TODO Quiero guardar estos errores en cloudWatch
         errorResponse.setExceptionName(exceptionName);
         errorResponse.setMethodName(handlerMethod.getMethod().getName());
-        errorResponse.setParameters(Arrays.toString(handlerMethod.getMethodParameters()));
+        errorResponse.setDescription(getDescriptionOfTheException(e));
         errorResponse.setControllerErrorOrigin(handlerMethod.getMethod().getDeclaringClass().getSimpleName());
         errorResponse.setMessage(e.getMessage());
         errorResponse.setStatusCode(error.getStatus());
+        log.info("Error message : {} class name : {}", e.getMessage(), e.getClass().getSimpleName());
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(error.getStatus()));
+    }
+
+    private String getDescriptionOfTheException(Exception e) {
+        StackTraceElement[] stackTrace = e.getStackTrace();
+        StringBuilder descriptionBuilder = new StringBuilder();
+        Arrays.stream(stackTrace).forEach( stackTraceElement -> {
+            descriptionBuilder.append("Class ").append(stackTraceElement.getClassName());
+            descriptionBuilder.append(" Method ").append(stackTraceElement.getMethodName());
+            descriptionBuilder.append(" Line number ").append(stackTraceElement.getLineNumber());
+
+        });
+        return descriptionBuilder.toString();
     }
 }

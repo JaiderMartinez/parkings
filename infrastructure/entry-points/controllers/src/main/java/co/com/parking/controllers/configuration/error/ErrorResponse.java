@@ -20,7 +20,7 @@ public class ErrorResponse {
     private String exceptionName;
     private String controllerErrorOrigin;
     private String methodName;
-    private String parameters;
+    private String description;
     private String message;
     private Integer statusCode;
 }
