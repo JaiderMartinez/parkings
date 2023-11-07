@@ -14,9 +14,10 @@ public class ParkingUseCase {
     }
 
     public Flux<Parking> findAll() {
-        return Flux.empty();
+        return parkingRepository.findAll();
     }
 
+    //No permitir que nada sea null
     public Mono<Parking> save(Parking parking) {
         return parkingRepository.save(parking);
     }

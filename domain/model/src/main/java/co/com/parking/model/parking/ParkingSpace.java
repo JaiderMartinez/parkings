@@ -1,7 +1,7 @@
 package co.com.parking.model.parking;
 
-import lombok.Builder;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,10 +11,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Parking {
+public class ParkingSpace {
 
     private Long id;
-    private String name;
-    private double hourPrice;
-    private String address;
+    private Integer order;
+    private boolean active;
+    private boolean isBusy;
+    private Integer locationX;
+    private Integer locationY;
+    private Parking parking;
 }

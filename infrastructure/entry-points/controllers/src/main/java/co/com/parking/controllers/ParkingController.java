@@ -22,7 +22,7 @@ public class ParkingController {
     private final ParkingUseCase parkingUseCase;
 
     @GetMapping
-    private Flux<ParkingResponseDto> findAll() {
+    public Flux<ParkingResponseDto> findAll() {
         return parkingUseCase.findAll()
                 .switchIfEmpty(Mono.error(new NotFoundException()))
                 .map(ParkingDtoMapper::toResponseDto);

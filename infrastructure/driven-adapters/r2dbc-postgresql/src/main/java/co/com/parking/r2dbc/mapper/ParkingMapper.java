@@ -10,12 +10,18 @@ public class ParkingMapper {
     public static ParkingEntity toEntity(Parking parking) {
         return ParkingEntity.builder()
                 .id(parking.getId())
+                .name(parking.getName())
+                .hourPrice(parking.getHourPrice())
+                .address(parking.getAddress())
                 .build();
     }
 
     public static Parking toModel(ParkingEntity parkingEntity) {
         return Parking.builder()
                 .id(parkingEntity.getId())
+                .name(parkingEntity.getName())
+                .hourPrice(parkingEntity.getHourPrice())
+                .address(parkingEntity.getAddress())
                 .build();
     }
 }
