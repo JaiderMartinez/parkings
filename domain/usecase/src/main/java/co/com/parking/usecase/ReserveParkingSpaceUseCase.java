@@ -1,11 +1,12 @@
 package co.com.parking.usecase;
 
-import co.com.parking.model.parking.ParkingSpace;
 import co.com.parking.model.parking.ReserveSpace;
+import co.com.parking.model.parking.gateways.ParkingRepository;
 import co.com.parking.usecase.exceptions.FailedTakeParkingSpaceException;
 import co.com.parking.model.parking.gateways.ParkingSpaceRepository;
 import co.com.parking.model.parking.gateways.ReserveSpaceInParkingRepository;
 import co.com.parking.usecase.exceptions.NotFoundException;
+import co.com.parking.usecase.exceptions.ParkingNotFoundException;
 import co.com.parking.usecase.exceptions.ParkingSpaceNotFoundException;
 import co.com.parking.usecase.utils.ErrorMessagesUtil;
 import reactor.core.publisher.Mono;
@@ -17,30 +18,38 @@ public class ReserveParkingSpaceUseCase {
 
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final ReserveSpaceInParkingRepository reserveSpaceInParkingRepository;
+    private final ParkingRepository parkingRepository;
 
     public ReserveParkingSpaceUseCase(ParkingSpaceRepository parkingSpaceRepository,
-                                      ReserveSpaceInParkingRepository reserveSpaceInParkingRepository) {
+                                      ReserveSpaceInParkingRepository reserveSpaceInParkingRepository,
+                                      ParkingRepository parkingRepository) {
         this.parkingSpaceRepository = parkingSpaceRepository;
         this.reserveSpaceInParkingRepository = reserveSpaceInParkingRepository;
+        this.parkingRepository = parkingRepository;
     }
 
-    //Reglas para poder tomar el estacionamiento:
+    //XXX Reglas para poder tomar el estacionamiento:
     //Estar disponible y no estar ocupado
 
-    // sino se encuentra elementos que sucede ejemplo un null,
+    //FIXME sino se encuentra elementos que sucede ejemplo un null,
     // deberia añadirlo en el flatmap ademas que pasaria si es null como reacciona el flatmap
-    //Sino se llama o se suscribe funciona esto?, en que situaciones debo usarlo? doOnNext
-    //Que pasaria si es null doOnNext
+    // Sino se llama o se suscribe funciona esto?, en que situaciones debo usarlo? doOnNext
+    // Que pasaria si es null doOnNext
     // como funciona esto de los hilos?
     public Mono<ReserveSpace> reserveParkingSpace(Long idParking, Long idUser, Long idParkingSpace) {
         return parkingSpaceRepository.findByIdParkingAndIdParkingSpace(idParking, idParkingSpace)
-                .switchIfEmpty(Mono.error(new ParkingSpaceNotFoundException()))
+                .switchIfEmpty(Mono.error(new ParkingNotFoundException()))
                 .flatMap( parkingSpaceToTake -> {
                     if (!parkingSpaceToTake.isActive() || parkingSpaceToTake.isBusy()) {
                         return Mono.error(new FailedTakeParkingSpaceException(ErrorMessagesUtil.PARKING_SPACE_NOT_AVAILABLE));
                     }
-                    parkingSpaceToTake.setBusy(true);
-                    return parkingSpaceRepository.save(parkingSpaceToTake);//el object parking es null
+                    return parkingRepository.findById(idParking)
+                            .switchIfEmpty(Mono.error(new ParkingSpaceNotFoundException()))
+                            .flatMap( parking -> {
+                                parkingSpaceToTake.setBusy(true);
+                                parkingSpaceToTake.setParking(parking);
+                                return parkingSpaceRepository.save(parkingSpaceToTake);
+                            });
                     }
                 ).flatMap( parkingSpaceSaved ->
                          reserveSpaceInParkingRepository.save(ReserveSpace.builder()
@@ -51,23 +60,31 @@ public class ReserveParkingSpaceUseCase {
                 );
     }
 
-    //Existe posibilidad o caso en que un usuario tiene mas de dos reservas de espacios
+    // FIXME Existe posibilidad o caso en que un usuario tiene mas de dos reservas de espacios
     public Mono<ReserveSpace> freeUpParkingSpace(Long idParking, Long idUser) {
         return reserveSpaceInParkingRepository.findByIdParkingAndIdUserAndReservationEndDateIsNull(idParking, idUser)
                 .switchIfEmpty(Mono.error(new NotFoundException(ErrorMessagesUtil.RESERVATION_NOT_FOUND)))
                 .flatMap(
-                    reserveSpace -> {
-                        reserveSpace.setReservationEndDate(LocalDateTime.now());
-                        reserveSpace.setTotalPayment(calculateTotalToPay(reserveSpace));
-                        return reserveSpaceInParkingRepository.save(reserveSpace);
-                    });
+                    reserveSpace ->
+                        calculateTotalToPay(reserveSpace)
+                                .flatMap( totalPayment -> {
+                                    reserveSpace.setReservationEndDate(LocalDateTime.now());
+                                    reserveSpace.setTotalPayment(totalPayment);
+                                    return Mono.just(reserveSpace);
+                                })
+                    )
+                .flatMap(reserveSpaceInParkingRepository::save);
     }
 
-    private double calculateTotalToPay(ReserveSpace reserveSpace) {
-        ParkingSpace parkingSpace = reserveSpace.getParkingSpace();
-        double parkingPricePerHour = parkingSpace.getParking().getHourPrice();
-        Duration duration = Duration.between(reserveSpace.getReservationStartDate(), LocalDateTime.now());
-        long hoursToPay = duration.toHours();
-        return parkingPricePerHour * hoursToPay;
+    //TODO validar en este caso como obtener el valor double sin tener que usar Mono
+    // Es beneficioso que use los publisher?
+    private Mono<Double> calculateTotalToPay(ReserveSpace reserveSpace) {
+        return parkingRepository.findById(reserveSpace.getParkingSpace().getParking().getId())
+                .flatMap( parking -> {
+                    double parkingPricePerHour = parking.getHourPrice();
+                    Duration duration = Duration.between(reserveSpace.getReservationStartDate(), LocalDateTime.now());
+                    long hoursToPay = duration.toHours();
+                    return Mono.just(parkingPricePerHour * hoursToPay);
+                });
     }
 }

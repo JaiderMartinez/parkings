@@ -9,4 +9,6 @@ public interface ParkingRepository {
     Mono<Parking> save(Parking parking);
 
     Flux<Parking> findAll();
+
+    Mono<Parking> findById(Long idParking);
 }

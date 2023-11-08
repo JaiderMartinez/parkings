@@ -24,7 +24,9 @@ public class ReserveParkingSpaceController {
 
     private final ReserveParkingSpaceUseCase reserveParkingSpaceUseCase;
 
-    //TODO como deberia usar el ResponseEntity
+    //FIXME como deberia usar el ResponseEntity
+    //TODO como es el flujo
+    //TODO falta manejar las transacciones
     @PostMapping("/occupy")
     public Mono<ResponseEntity<Mono<ReserveSpaceResponseDto>>> reserveParkingSpace(@RequestBody ParkingLotOccupyRequestDto parkingLotOccupyRequestDto) {
         return Mono.just( new ResponseEntity<>(

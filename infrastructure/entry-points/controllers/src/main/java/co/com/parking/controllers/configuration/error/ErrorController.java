@@ -21,7 +21,7 @@ public class ErrorController {
         STATUS_CODES.put(NotFoundException.class.getSimpleName(),
                 new Error(ErrorCodeEnum.NOT_FOUND.getCode(), HttpStatus.NO_CONTENT.value()));
         STATUS_CODES.put(FailedTakeParkingSpaceException.class.getSimpleName(),
-                new Error());
+                new Error(ErrorCodeEnum.NOT_FOUND.getCode(), HttpStatus.CONFLICT.value()));
     }
 
     @ExceptionHandler({Exception.class, MethodArgumentTypeMismatchException.class})

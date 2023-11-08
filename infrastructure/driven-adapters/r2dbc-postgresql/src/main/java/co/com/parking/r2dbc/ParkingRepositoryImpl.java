@@ -25,4 +25,10 @@ public class ParkingRepositoryImpl implements ParkingRepository {
         return parkingDao.findAll()
                 .map(ParkingMapper::toModel);
     }
+
+    @Override
+    public Mono<Parking> findById(Long idParking) {
+        return parkingDao.findById(idParking)
+                .map(ParkingMapper::toModel);
+    }
 }

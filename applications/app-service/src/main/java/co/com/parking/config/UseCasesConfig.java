@@ -18,9 +18,10 @@ public class UseCasesConfig {
 
         @Bean
         ReserveParkingSpaceUseCase reserveParkingSpaceUseCase(ParkingSpaceRepository parkingSpaceRepository,
-                                                              ReserveSpaceInParkingRepository reserveSpaceInParkingRepository) {
+                                                              ReserveSpaceInParkingRepository reserveSpaceInParkingRepository,
+                                                              ParkingRepository parkingRepository) {
                 return new ReserveParkingSpaceUseCase(
                         parkingSpaceRepository,
-                        reserveSpaceInParkingRepository);
+                        reserveSpaceInParkingRepository, parkingRepository);
         }
 }

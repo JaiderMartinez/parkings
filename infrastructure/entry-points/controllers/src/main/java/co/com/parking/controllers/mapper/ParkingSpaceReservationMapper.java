@@ -12,10 +12,10 @@ public class ParkingSpaceReservationMapper {
         return ReserveSpaceResponseDto.builder()
                 .idParkingSpace(reserveSpace.getId())
                 .idParking(reserveSpace.getParkingSpace().getId())
-                .parkingName(reserveSpace.getParkingSpace().getParking().getName())
-                .hourPrice(reserveSpace.getParkingSpace().getParking().getHourPrice())
-                .locationX(reserveSpace.getParkingSpace().getLocationX())
-                .locationY(reserveSpace.getParkingSpace().getLocationY())
+                //.parkingName(reserveSpace.getParkingSpace().getParking().getName())
+                //.hourPrice(reserveSpace.getParkingSpace().getParking().getHourPrice())
+                //.locationX(reserveSpace.getParkingSpace().getLocationX())
+                //.locationY(reserveSpace.getParkingSpace().getLocationY())
                 .build();
     }
 

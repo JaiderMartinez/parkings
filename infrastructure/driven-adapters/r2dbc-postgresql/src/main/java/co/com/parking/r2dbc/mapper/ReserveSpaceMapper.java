@@ -1,5 +1,6 @@
 package co.com.parking.r2dbc.mapper;
 
+import co.com.parking.model.parking.ParkingSpace;
 import co.com.parking.model.parking.ReserveSpace;
 import co.com.parking.r2dbc.entities.ReserveSpaceEntity;
 import lombok.experimental.UtilityClass;
@@ -14,7 +15,9 @@ public class ReserveSpaceMapper {
                 .reservationStartDate(reserveSpaceEntity.getReservationStartDate())
                 .reservationEndDate(reserveSpaceEntity.getReservationEndDate())
                 .totalPayment(reserveSpaceEntity.getTotalPayment())
-                .parkingSpace(ParkingSpaceMapper.toModel(reserveSpaceEntity.getParkingSpaceEntity()))
+                .parkingSpace(ParkingSpace.builder()
+                        .id(reserveSpaceEntity.getIdParkingSpace())
+                        .build())
                 .build();
     }
 
@@ -25,7 +28,7 @@ public class ReserveSpaceMapper {
                 .reservationStartDate(reserveSpace.getReservationStartDate())
                 .reservationEndDate(reserveSpace.getReservationEndDate())
                 .totalPayment(reserveSpace.getTotalPayment())
-                .parkingSpaceEntity(ParkingSpaceMapper.toEntity(reserveSpace.getParkingSpace()))
+                .idParkingSpace(reserveSpace.getParkingSpace().getId())
                 .build();
     }
 }

@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ReserveSpaceResponseDto {
 
+    //TODO porque el orden de los cmapos es diferente?
     @JsonProperty("id")
     private Long idParking;
     @JsonProperty("nombre")

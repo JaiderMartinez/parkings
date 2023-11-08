@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface ReserveSpaceDao extends R2dbcRepository<ReserveSpaceEntity, Long> {
 
-    Mono<ReserveSpaceEntity> findByParkingSpaceEntityIdAndIdUserAndReservationEndDateIsNull(Long idParking, Long idUser);
+    Mono<ReserveSpaceEntity> findByIdParkingSpaceAndIdUserAndReservationEndDateIsNull(Long idParking, Long idUser);
 }

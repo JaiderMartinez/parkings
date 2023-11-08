@@ -1,20 +1,13 @@
 package co.com.parking.r2dbc.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
-import java.util.List;
 
 @Table(name = "parking_spaces")
 @Getter
@@ -25,19 +18,16 @@ import java.util.List;
 public class ParkingSpaceEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer order;
+    @Column(value = "order_number")
+    private Integer orderNumber;
     private boolean active;
-    @Column(name = "location_x")
+    @Column(value = "is_busy")
+    private boolean isBusy;
+    @Column(value = "location_x")
     private Integer locationX;
-    @Column(name = "location_y")
+    @Column(value = "location_y")
     private Integer locationY;
-
-    @ManyToOne
-    @JoinColumn(name = "id_parking", referencedColumnName = "id")
-    private ParkingEntity parkingEntity;
-
-    @OneToMany(mappedBy = "parkingSpaceEntity")
-    private List<ReserveSpaceEntity> reserveSpacesEntities;
+    @Column(value = "id_parking")
+    private Long idParking;
 }

@@ -14,7 +14,7 @@ public class ParkingSpaceRepositoryImpl implements ParkingSpaceRepository {
 
     private final ParkingSpaceDao parkingSpaceDao;
 
-    //TODO no funciona trayendome el objeto de la otra consulta
+    //FIXME no funciona trayendome el objeto de la otra consulta
     @Override
     public Mono<ParkingSpace> findByIdParkingAndIdParkingSpace(Long idParking, Long idParkingSpace) {
         return parkingSpaceDao.findByIdAndParkingEntityId(idParkingSpace, idParking)
