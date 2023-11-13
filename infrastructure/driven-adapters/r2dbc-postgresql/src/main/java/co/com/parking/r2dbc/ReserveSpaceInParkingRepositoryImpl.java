@@ -22,7 +22,7 @@ public class ReserveSpaceInParkingRepositoryImpl implements ReserveSpaceInParkin
 
     @Override
     public Mono<ReserveSpace> findByIdParkingAndIdUserAndReservationEndDateIsNull(Long idParking, Long idUser) {
-        return reserveSpaceDao.findByIdParkingSpaceAndIdUserAndReservationEndDateIsNull(idParking, idUser)
+        return reserveSpaceDao.findByIdParkingAndIdUserAndReservationEndDateIsNull(idParking, idUser)
                 .map(ReserveSpaceMapper::toModel);
     }
 }

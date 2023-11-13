@@ -14,7 +14,7 @@ public class ParkingSpaceRepositoryImpl implements ParkingSpaceRepository {
 
     private final ParkingSpaceDao parkingSpaceDao;
 
-    //FIXME no funciona trayendome el objeto de la otra consulta
+    //FIXME no funciona trayendome el objeto de la otra consulta, existe una forma de traerme la otra entidad
     @Override
     public Mono<ParkingSpace> findByIdParkingAndIdParkingSpace(Long idParking, Long idParkingSpace) {
         return parkingSpaceDao.findByIdAndParkingEntityId(idParkingSpace, idParking)
@@ -24,6 +24,12 @@ public class ParkingSpaceRepositoryImpl implements ParkingSpaceRepository {
     @Override
     public Mono<ParkingSpace> save(ParkingSpace parkingSpace) {
         return parkingSpaceDao.save( ParkingSpaceMapper.toEntity(parkingSpace) )
+                .map(ParkingSpaceMapper::toModel);
+    }
+
+    @Override
+    public Mono<ParkingSpace> findById(Long idParkingSpace) {
+        return parkingSpaceDao.findById(idParkingSpace)
                 .map(ParkingSpaceMapper::toModel);
     }
 }

@@ -15,6 +15,6 @@ public class ParkingResponseDto {
 
     private Long id;
     private String name;
-    private long hourPrice;
+    private double hourPrice;
     private String address;
 }

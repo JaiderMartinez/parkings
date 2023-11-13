@@ -1,57 +1,52 @@
 package co.com.parking.controllers.configuration.error;
 
-import co.com.parking.usecase.exceptions.FailedTakeParkingSpaceException;
+import co.com.parking.controllers.dto.response.ResponseErrorDto;
+import co.com.parking.controllers.mapper.ResponseErrorMapper;
+import co.com.parking.model.parking.config.ErrorCode;
+import co.com.parking.model.parking.config.ErrorDictionary;
+import co.com.parking.usecase.ErrorDictionaryUseCase;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
-
+@AllArgsConstructor
 @Slf4j
 @ControllerAdvice
 public class ErrorController {
-    private static final ConcurrentHashMap<String, Error> STATUS_CODES = new ConcurrentHashMap<>();
 
-    private ErrorController() {
-        STATUS_CODES.put(NotFoundException.class.getSimpleName(),
-                new Error(ErrorCodeEnum.NOT_FOUND.getCode(), HttpStatus.NO_CONTENT.value()));
-        STATUS_CODES.put(FailedTakeParkingSpaceException.class.getSimpleName(),
-                new Error(ErrorCodeEnum.NOT_FOUND.getCode(), HttpStatus.CONFLICT.value()));
+    ErrorDictionaryUseCase errorDictionaryUseCase;
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Mono<ResponseEntity<ResponseErrorDto>> handleWebExchangeBindException(MethodArgumentNotValidException e) {
+        log.info("entro");
+        return genericHandleException(ErrorCode.B400000, e);
     }
 
-    @ExceptionHandler({Exception.class, MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception e, HandlerMethod handlerMethod) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        String exceptionName = e.getClass().getSimpleName();
-        Error error = STATUS_CODES.get(exceptionName);
-        if (error == null) {
-            error = new Error("500", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-        //TODO Quiero guardar estos errores en cloudWatch
-        errorResponse.setExceptionName(exceptionName);
-        errorResponse.setMethodName(handlerMethod.getMethod().getName());
-        errorResponse.setDescription(getDescriptionOfTheException(e));
-        errorResponse.setControllerErrorOrigin(handlerMethod.getMethod().getDeclaringClass().getSimpleName());
-        errorResponse.setMessage(e.getMessage());
-        errorResponse.setStatusCode(error.getStatus());
-        log.info("Error message : {} class name : {}", e.getMessage(), e.getClass().getSimpleName());
-        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(error.getStatus()));
+    public Mono<ResponseEntity<ResponseErrorDto>> genericHandleException(ErrorCode errorCode, Exception e) {
+        return errorDictionaryUseCase.findById(errorCode.getCode())
+                .flatMap(errorDictionary -> {
+                    log.info("Diccionario de errores recuperado: {}", errorDictionary);
+                    return Mono.just(getErrorEntity(errorDictionary, e));
+                });
     }
 
-    private String getDescriptionOfTheException(Exception e) {
-        StackTraceElement[] stackTrace = e.getStackTrace();
-        StringBuilder descriptionBuilder = new StringBuilder();
-        Arrays.stream(stackTrace).forEach( stackTraceElement -> {
-            descriptionBuilder.append("Class ").append(stackTraceElement.getClassName());
-            descriptionBuilder.append(" Method ").append(stackTraceElement.getMethodName());
-            descriptionBuilder.append(" Line number ").append(stackTraceElement.getLineNumber());
+    private ResponseEntity<ResponseErrorDto> getErrorEntity(ErrorDictionary errorDictionary, Exception e) {
+        return ResponseEntity.status(errorDictionary.getHttpStatus())
+                .headers(getHeaders(e.getMessage()))
+                .body(ResponseErrorMapper.toResponseErrorDto(errorDictionary));
+    }
 
-        });
-        return descriptionBuilder.toString();
+    private HttpHeaders getHeaders(String message) {
+        log.error("Error message : {}", message);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("message", message);
+        return headers;
     }
 }

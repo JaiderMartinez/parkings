@@ -21,6 +21,7 @@ public class ParkingController {
 
     private final ParkingUseCase parkingUseCase;
 
+    //TODO traerme los parkings cerca a la posicion del usuario, definir el maximo de cerca
     @GetMapping
     public Flux<ParkingResponseDto> findAll() {
         return parkingUseCase.findAll()

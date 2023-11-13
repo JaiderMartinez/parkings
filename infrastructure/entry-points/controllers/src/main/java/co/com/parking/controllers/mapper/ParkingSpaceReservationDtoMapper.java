@@ -6,16 +6,16 @@ import co.com.parking.model.parking.ReserveSpace;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class ParkingSpaceReservationMapper {
+public class ParkingSpaceReservationDtoMapper {
 
     public static ReserveSpaceResponseDto toResponseDto(ReserveSpace reserveSpace) {
         return ReserveSpaceResponseDto.builder()
-                .idParkingSpace(reserveSpace.getId())
-                .idParking(reserveSpace.getParkingSpace().getId())
-                //.parkingName(reserveSpace.getParkingSpace().getParking().getName())
-                //.hourPrice(reserveSpace.getParkingSpace().getParking().getHourPrice())
-                //.locationX(reserveSpace.getParkingSpace().getLocationX())
-                //.locationY(reserveSpace.getParkingSpace().getLocationY())
+                .idParking(reserveSpace.getParkingSpace().getParking().getId())
+                .idParkingSpace(reserveSpace.getParkingSpace().getId())
+                .parkingName(reserveSpace.getParkingSpace().getParking().getName())
+                .hourPrice(reserveSpace.getParkingSpace().getParking().getHourPrice())
+                .locationX(reserveSpace.getParkingSpace().getLocationX())
+                .locationY(reserveSpace.getParkingSpace().getLocationY())
                 .build();
     }
 

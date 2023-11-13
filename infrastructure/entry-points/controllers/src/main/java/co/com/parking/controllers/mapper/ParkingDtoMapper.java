@@ -12,6 +12,7 @@ public class ParkingDtoMapper {
         return ParkingResponseDto.builder()
                 .id(parking.getId())
                 .name(parking.getName())
+                .hourPrice(parking.getHourPrice())
                 .address(parking.getAddress())
                 .build();
     }

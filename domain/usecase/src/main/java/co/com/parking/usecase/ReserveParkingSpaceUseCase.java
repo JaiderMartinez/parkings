@@ -48,7 +48,8 @@ public class ReserveParkingSpaceUseCase {
                             .flatMap( parking -> {
                                 parkingSpaceToTake.setBusy(true);
                                 parkingSpaceToTake.setParking(parking);
-                                return parkingSpaceRepository.save(parkingSpaceToTake);
+                                return parkingSpaceRepository.save(parkingSpaceToTake)
+                                        .thenReturn(parkingSpaceToTake);
                             });
                     }
                 ).flatMap( parkingSpaceSaved ->
@@ -57,34 +58,79 @@ public class ReserveParkingSpaceUseCase {
                             .parkingSpace(parkingSpaceSaved)
                             .idUser(idUser)
                             .build())
+                                 .flatMap( reserveSpace -> {
+                                     reserveSpace.setParkingSpace(parkingSpaceSaved);
+                                     return Mono.just(reserveSpace);
+                                 })
                 );
     }
 
     // FIXME Existe posibilidad o caso en que un usuario tiene mas de dos reservas de espacios
     public Mono<ReserveSpace> freeUpParkingSpace(Long idParking, Long idUser) {
         return reserveSpaceInParkingRepository.findByIdParkingAndIdUserAndReservationEndDateIsNull(idParking, idUser)
-                .switchIfEmpty(Mono.error(new NotFoundException(ErrorMessagesUtil.RESERVATION_NOT_FOUND)))
+                .switchIfEmpty(Mono.error(new ParkingSpaceNotFoundException()))
                 .flatMap(
                     reserveSpace ->
-                        calculateTotalToPay(reserveSpace)
-                                .flatMap( totalPayment -> {
-                                    reserveSpace.setReservationEndDate(LocalDateTime.now());
-                                    reserveSpace.setTotalPayment(totalPayment);
-                                    return Mono.just(reserveSpace);
-                                })
+                        parkingRepository.findById(idParking)
+                                .switchIfEmpty(Mono.error(new ParkingNotFoundException()))
+                                        .flatMap( parking -> {
+                                            reserveSpace.setReservationEndDate(LocalDateTime.now());
+                                            reserveSpace.getParkingSpace().setParking(parking);
+                                            reserveSpace.setTotalPayment(calculateTotalToPay(reserveSpace));
+                                            return Mono.just(reserveSpace);
+                                        })
                     )
-                .flatMap(reserveSpaceInParkingRepository::save);
+                .flatMap( reserveSpace ->
+                    reserveSpaceInParkingRepository.save(reserveSpace)
+                            .flatMap( reserveSpaceSaved ->
+                                 parkingSpaceRepository.findById(reserveSpace.getParkingSpace().getId())
+                                        .switchIfEmpty(Mono.error(new ParkingSpaceNotFoundException()))
+                                        .flatMap( parkingSpace -> {
+                                            parkingSpace.setBusy(false);
+                                            parkingSpace.setParking(reserveSpace.getParkingSpace().getParking());
+                                            reserveSpace.setParkingSpace(parkingSpace);
+                                            return parkingSpaceRepository.save(parkingSpace)
+                                                    .thenReturn(reserveSpace);
+                                        })
+                            )
+                );
     }
 
     //TODO validar en este caso como obtener el valor double sin tener que usar Mono
     // Es beneficioso que use los publisher?
-    private Mono<Double> calculateTotalToPay(ReserveSpace reserveSpace) {
-        return parkingRepository.findById(reserveSpace.getParkingSpace().getParking().getId())
-                .flatMap( parking -> {
-                    double parkingPricePerHour = parking.getHourPrice();
-                    Duration duration = Duration.between(reserveSpace.getReservationStartDate(), LocalDateTime.now());
-                    long hoursToPay = duration.toHours();
-                    return Mono.just(parkingPricePerHour * hoursToPay);
-                });
+    private double calculateTotalToPay(ReserveSpace reserveSpace) {
+        double parkingPricePerHour = reserveSpace.getParkingSpace().getParking().getHourPrice();
+        Duration duration = Duration.between(reserveSpace.getReservationStartDate(), LocalDateTime.now());
+        long hoursToPay = duration.toHours();
+        return parkingPricePerHour * hoursToPay;
     }
+
+    public Mono<ReserveSpace> reserveParkingSpacePrueba(Long idParking, Long idUser, Long idParkingSpace) {
+        return parkingSpaceRepository.findByIdParkingAndIdParkingSpace(idParking, idParkingSpace)
+                    .switchIfEmpty(Mono.error(new ParkingNotFoundException()))
+                    .flatMap( parkingSpaceToTake -> {
+                                if (!parkingSpaceToTake.isActive() || parkingSpaceToTake.isBusy()) {
+                                    return Mono.error(new FailedTakeParkingSpaceException(ErrorMessagesUtil.PARKING_SPACE_NOT_AVAILABLE));
+                                }
+                                return parkingRepository.findById(idParking)
+                                        .switchIfEmpty(Mono.error(new ParkingSpaceNotFoundException()))
+                                        .flatMap( parking -> {
+                                            parkingSpaceToTake.setBusy(true);
+                                            parkingSpaceToTake.setParking(parking);
+                                            return parkingSpaceRepository.save(parkingSpaceToTake)
+                                                    .thenReturn(parkingSpaceToTake);
+                                        });
+                            }
+                    ).flatMap( parkingSpaceSaved ->
+                            reserveSpaceInParkingRepository.save(ReserveSpace.builder()
+                                            .reservationStartDate(LocalDateTime.now())
+                                            .parkingSpace(parkingSpaceSaved)
+                                            .idUser(idUser)
+                                            .build())
+                                    .flatMap( reserveSpace -> {
+                                        reserveSpace.setParkingSpace(parkingSpaceSaved);
+                                        return Mono.just(reserveSpace);
+                                    })
+                    );
+        }
 }

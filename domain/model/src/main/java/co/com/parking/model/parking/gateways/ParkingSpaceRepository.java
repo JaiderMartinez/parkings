@@ -8,4 +8,6 @@ public interface ParkingSpaceRepository {
     Mono<ParkingSpace> findByIdParkingAndIdParkingSpace(Long idParking, Long idParkingSpace);
 
     Mono<ParkingSpace> save(ParkingSpace parkingSpace);
+
+    Mono<ParkingSpace> findById(Long idParkingSpace);
 }

@@ -5,16 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReserveSpaceResponseDto {
 
-    //TODO porque el orden de los cmapos es diferente?
+    //TODO porque el orden de los cmapos que muestra es diferente?
     @JsonProperty("id")
     private Long idParking;
     @JsonProperty("nombre")

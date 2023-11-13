@@ -3,7 +3,7 @@ server:
 spring:
   application:
     name: "parking"
-  r2dbc:
+  r2dbc: #TODO eliminar devtools
     name: parking
     username: root
     password: 12345678
