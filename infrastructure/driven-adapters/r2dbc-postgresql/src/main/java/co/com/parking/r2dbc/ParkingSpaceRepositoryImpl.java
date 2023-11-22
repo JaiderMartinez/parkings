@@ -14,7 +14,6 @@ public class ParkingSpaceRepositoryImpl implements ParkingSpaceRepository {
 
     private final ParkingSpaceDao parkingSpaceDao;
 
-    //FIXME no funciona trayendome el objeto de la otra consulta, existe una forma de traerme la otra entidad
     @Override
     public Mono<ParkingSpace> findByIdParkingAndIdParkingSpace(Long idParking, Long idParkingSpace) {
         return parkingSpaceDao.findByIdAndParkingEntityId(idParkingSpace, idParking)

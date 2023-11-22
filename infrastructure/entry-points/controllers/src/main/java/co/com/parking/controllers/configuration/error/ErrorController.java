@@ -5,36 +5,30 @@ import co.com.parking.controllers.mapper.ResponseErrorMapper;
 import co.com.parking.model.parking.config.ErrorCode;
 import co.com.parking.model.parking.config.ErrorDictionary;
 import co.com.parking.usecase.ErrorDictionaryUseCase;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Mono;
 
-@AllArgsConstructor
 @Slf4j
 @ControllerAdvice
+@RequiredArgsConstructor
 public class ErrorController {
 
-    ErrorDictionaryUseCase errorDictionaryUseCase;
+    private final ErrorDictionaryUseCase errorDictionaryUseCase;
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Mono<ResponseEntity<ResponseErrorDto>> handleWebExchangeBindException(MethodArgumentNotValidException e) {
-        log.info("entro");
+    @ExceptionHandler({WebExchangeBindException.class})
+    public Mono<ResponseEntity<ResponseErrorDto>> handleWebExchangeBindException(WebExchangeBindException e) {
         return genericHandleException(ErrorCode.B400000, e);
     }
 
     public Mono<ResponseEntity<ResponseErrorDto>> genericHandleException(ErrorCode errorCode, Exception e) {
         return errorDictionaryUseCase.findById(errorCode.getCode())
-                .flatMap(errorDictionary -> {
-                    log.info("Diccionario de errores recuperado: {}", errorDictionary);
-                    return Mono.just(getErrorEntity(errorDictionary, e));
-                });
+                .map(errorDictionary -> getErrorEntity(errorDictionary, e));
     }
 
     private ResponseEntity<ResponseErrorDto> getErrorEntity(ErrorDictionary errorDictionary, Exception e) {

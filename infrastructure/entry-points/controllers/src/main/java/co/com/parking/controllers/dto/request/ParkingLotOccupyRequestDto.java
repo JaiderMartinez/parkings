@@ -18,5 +18,4 @@ public class ParkingLotOccupyRequestDto {
     private Long idUser;
     private Long parkingId;
     private Long idParkingSpace;
-    private String hola;
 }

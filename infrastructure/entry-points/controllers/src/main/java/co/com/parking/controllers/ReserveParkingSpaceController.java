@@ -8,6 +8,7 @@ import co.com.parking.usecase.ReserveParkingSpaceUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +22,11 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping(path = "/parking-lot")
 @RequiredArgsConstructor
+@Validated
 public class ReserveParkingSpaceController {
 
     private final ReserveParkingSpaceUseCase reserveParkingSpaceUseCase;
 
-    //FIXME como deberia usar el ResponseEntity
-    //TODO como es el flujo
     //TODO falta manejar las transacciones
     @PostMapping("/occupy")
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,14 +44,5 @@ public class ReserveParkingSpaceController {
             @RequestParam(name = "idUser") Long idUser) {
         return reserveParkingSpaceUseCase.freeUpParkingSpace(idParking, idUser)
                 .map(ParkingSpaceReservationDtoMapper::toParkingSpaceReleaseResponseDto);
-    }
-
-    @PostMapping("/copy-prueba")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ReserveSpaceResponseDto> prueba(@RequestBody @Valid ParkingLotOccupyRequestDto parkingLotOccupyRequestDto) {
-        return reserveParkingSpaceUseCase.reserveParkingSpacePrueba(parkingLotOccupyRequestDto.getParkingId(),
-                                parkingLotOccupyRequestDto.getIdUser(),
-                                parkingLotOccupyRequestDto.getIdParkingSpace())
-                        .map(ParkingSpaceReservationDtoMapper::toResponseDto);
     }
 }

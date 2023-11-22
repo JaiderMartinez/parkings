@@ -9,6 +9,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'com.tngtech.archunit:archunit:1.1.0'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.register('explodedJar', Copy) {

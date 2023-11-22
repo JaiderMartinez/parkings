@@ -4,6 +4,7 @@ import co.com.parking.model.parking.gateways.ErrorDictionaryGateway;
 import co.com.parking.model.parking.gateways.ParkingRepository;
 import co.com.parking.model.parking.gateways.ParkingSpaceRepository;
 import co.com.parking.model.parking.gateways.ReserveSpaceInParkingRepository;
+import co.com.parking.model.parking.gateways.UserGateway;
 import co.com.parking.usecase.ErrorDictionaryUseCase;
 import co.com.parking.usecase.ParkingUseCase;
 import co.com.parking.usecase.ReserveParkingSpaceUseCase;
@@ -20,11 +21,12 @@ public class UseCasesConfig {
 
         @Bean
         public ReserveParkingSpaceUseCase reserveParkingSpaceUseCase(ParkingSpaceRepository parkingSpaceRepository,
-                                                              ReserveSpaceInParkingRepository reserveSpaceInParkingRepository,
-                                                              ParkingRepository parkingRepository) {
+                                                                     ReserveSpaceInParkingRepository reserveSpaceInParkingRepository,
+                                                                     ParkingRepository parkingRepository,
+                                                                     UserGateway userGateway) {
                 return new ReserveParkingSpaceUseCase(
                         parkingSpaceRepository,
-                        reserveSpaceInParkingRepository, parkingRepository);
+                        reserveSpaceInParkingRepository, parkingRepository, userGateway);
         }
 
         @Bean

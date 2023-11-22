@@ -1,8 +1,11 @@
 server:
-  port: 8080
+  port: 8090
 spring:
   application:
     name: "parking"
+  devtools:
+
+    add-properties: false
   r2dbc: #TODO eliminar devtools
     name: parking
     username: root
@@ -24,3 +27,7 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+endpoint:
+  micro:
+    user: ${MICRO_BASE_USER:http://localhost:8080}
