@@ -4,10 +4,12 @@ import co.com.parking.controllers.dto.response.ResponseErrorDto;
 import co.com.parking.controllers.mapper.ResponseErrorMapper;
 import co.com.parking.model.parking.config.ErrorCode;
 import co.com.parking.model.parking.config.ErrorDictionary;
+import co.com.parking.model.parking.config.ParkingException;
 import co.com.parking.usecase.ErrorDictionaryUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +23,11 @@ public class ErrorController {
 
     private final ErrorDictionaryUseCase errorDictionaryUseCase;
 
+    @ExceptionHandler({ParkingException.class})
+    public Mono<ResponseEntity<ResponseErrorDto>> handlerParkingException(ParkingException e) {
+        return genericHandleException(e.getError(), e);
+    }
+
     @ExceptionHandler({WebExchangeBindException.class})
     public Mono<ResponseEntity<ResponseErrorDto>> handleWebExchangeBindException(WebExchangeBindException e) {
         return genericHandleException(ErrorCode.B400000, e);
@@ -28,6 +35,12 @@ public class ErrorController {
 
     public Mono<ResponseEntity<ResponseErrorDto>> genericHandleException(ErrorCode errorCode, Exception e) {
         return errorDictionaryUseCase.findById(errorCode.getCode())
+                .defaultIfEmpty(ErrorDictionary.builder()
+                        .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .messageEs("Ha ocurrido un error en el sistema, por favor contacte al administrador")
+                        .messageEn("An error has occurred in the system, please contact the administrator")
+                        .id("B500-000")
+                        .build())
                 .map(errorDictionary -> getErrorEntity(errorDictionary, e));
     }
 

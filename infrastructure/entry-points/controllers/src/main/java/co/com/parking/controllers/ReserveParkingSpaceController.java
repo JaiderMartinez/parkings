@@ -22,15 +22,13 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping(path = "/parking-lot")
 @RequiredArgsConstructor
-@Validated
 public class ReserveParkingSpaceController {
 
     private final ReserveParkingSpaceUseCase reserveParkingSpaceUseCase;
 
-    //TODO falta manejar las transacciones
     @PostMapping("/occupy")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ReserveSpaceResponseDto> reserveParkingSpace(@RequestBody ParkingLotOccupyRequestDto parkingLotOccupyRequestDto) {
+    public Mono<ReserveSpaceResponseDto> reserveParkingSpace(@Valid @RequestBody ParkingLotOccupyRequestDto parkingLotOccupyRequestDto) {
         return reserveParkingSpaceUseCase.reserveParkingSpace(parkingLotOccupyRequestDto.getParkingId(),
                                                                parkingLotOccupyRequestDto.getIdUser(),
                                                                parkingLotOccupyRequestDto.getIdParkingSpace())

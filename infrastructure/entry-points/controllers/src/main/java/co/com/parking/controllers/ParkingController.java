@@ -1,6 +1,5 @@
 package co.com.parking.controllers;
 
-import co.com.parking.controllers.configuration.error.NotFoundException;
 import co.com.parking.controllers.dto.request.ParkingRequestDto;
 import co.com.parking.controllers.dto.response.ParkingResponseDto;
 import co.com.parking.controllers.mapper.ParkingDtoMapper;
@@ -21,11 +20,9 @@ public class ParkingController {
 
     private final ParkingUseCase parkingUseCase;
 
-    //TODO traerme los parkings cerca a la posicion del usuario, definir el maximo de cerca
     @GetMapping
     public Flux<ParkingResponseDto> findAll() {
         return parkingUseCase.findAll()
-                .switchIfEmpty(Mono.error(new NotFoundException()))
                 .map(ParkingDtoMapper::toResponseDto);
     }
 
