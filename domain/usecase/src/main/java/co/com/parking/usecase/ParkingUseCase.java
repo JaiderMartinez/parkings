@@ -20,7 +20,6 @@ public class ParkingUseCase {
                 .switchIfEmpty(Mono.error(new ParkingException(ErrorCode.S204000)));
     }
 
-    // FIXME No permitir que nada sea null
     public Mono<Parking> save(Parking parking) {
         return parkingRepository.save(parking);
     }

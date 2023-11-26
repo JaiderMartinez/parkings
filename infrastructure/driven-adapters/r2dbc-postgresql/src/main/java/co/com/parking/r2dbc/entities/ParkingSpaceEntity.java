@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.transaction.annotation.Transactional;
 
 @Table(name = "parking_spaces")
 @Getter
@@ -15,19 +16,16 @@ import org.springframework.data.relational.core.mapping.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Transactional
 public class ParkingSpaceEntity {
 
     @Id
     private Long id;
-    @Column(value = "order_number")
     private Integer orderNumber;
     private boolean active;
     @Column(value = "is_busy")
     private boolean isBusy;
-    @Column(value = "location_x")
     private Integer locationX;
-    @Column(value = "location_y")
     private Integer locationY;
-    @Column(value = "id_parking")
     private Long idParking;
 }

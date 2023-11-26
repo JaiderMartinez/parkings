@@ -3,10 +3,7 @@ server:
 spring:
   application:
     name: "parking"
-  devtools:
-
-    add-properties: false
-  r2dbc: #TODO eliminar devtools
+  r2dbc:
     name: parking
     username: root
     password: 12345678
@@ -31,3 +28,8 @@ cors:
 endpoint:
   micro:
     user: ${MICRO_BASE_USER:http://localhost:8080}
+
+resilience:
+  communication:
+    max-attempts: 3
+    backoff-interval: 1

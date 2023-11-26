@@ -23,12 +23,12 @@ public class ErrorController {
 
     private final ErrorDictionaryUseCase errorDictionaryUseCase;
 
-    @ExceptionHandler({ParkingException.class})
+    @ExceptionHandler({Exception.class, ParkingException.class})
     public Mono<ResponseEntity<ResponseErrorDto>> handlerParkingException(ParkingException e) {
         return genericHandleException(e.getError(), e);
     }
 
-    @ExceptionHandler({WebExchangeBindException.class})
+    @ExceptionHandler(WebExchangeBindException.class)
     public Mono<ResponseEntity<ResponseErrorDto>> handleWebExchangeBindException(WebExchangeBindException e) {
         return genericHandleException(ErrorCode.B400000, e);
     }

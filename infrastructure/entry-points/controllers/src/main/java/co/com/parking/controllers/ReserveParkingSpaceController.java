@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping(path = "/parking-lot")
 @RequiredArgsConstructor
+@Validated
 public class ReserveParkingSpaceController {
 
     private final ReserveParkingSpaceUseCase reserveParkingSpaceUseCase;

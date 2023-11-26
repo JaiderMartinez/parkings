@@ -10,7 +10,7 @@ public interface ParkingSpaceDao extends R2dbcRepository<ParkingSpaceEntity, Lon
 
     @Query( "SELECT * FROM parking_spaces " +
             "INNER JOIN parkings " +
-            "ON parking_spaces.id = parkings.id " +
+            "ON parking_spaces.id_parking = parkings.id " +
             "WHERE parking_spaces.id = :id_parking_space AND parkings.id = :id_parking")
     Mono<ParkingSpaceEntity> findByIdAndParkingEntityId(@Param("id_parking_space") Long idParkingSpace, @Param("id_parking") Long idParking);
 }

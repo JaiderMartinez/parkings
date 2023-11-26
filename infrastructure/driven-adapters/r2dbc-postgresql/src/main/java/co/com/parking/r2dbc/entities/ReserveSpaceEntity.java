@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -24,16 +23,11 @@ public class ReserveSpaceEntity {
 
     @Id
     private Long id;
-    @Column(value = "id_user")
     private Long idUser;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(value = "reservation_start_date")
     private LocalDateTime reservationStartDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(value = "reservation_end_date")
     private LocalDateTime reservationEndDate;
-    @Column(value = "total_payment")
     private double totalPayment;
-    @Column(value = "id_parking_space")
     private Long idParkingSpace;
 }
