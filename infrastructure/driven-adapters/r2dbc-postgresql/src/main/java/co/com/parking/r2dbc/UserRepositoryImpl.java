@@ -35,6 +35,8 @@ public class UserRepositoryImpl implements UserGateway {
                         return userResponse.bodyToMono(User.class);
                     } else if (userResponse.statusCode().equals(HttpStatus.NOT_FOUND)) {
                         return Mono.error(new ParkingException(ErrorCode.F404000));
+                    } else if (userResponse.statusCode().equals(HttpStatus.NO_CONTENT)) {
+                        return Mono.error(new ParkingException(ErrorCode.S204000));
                     } else {
                         return Mono.error(new ParkingException(ErrorCode.I500000));
                     }
