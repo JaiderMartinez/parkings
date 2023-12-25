@@ -1,4 +1,4 @@
-package co.com.parking.r2dbc;
+package co.com.parking.r2dbc.repository;
 
 import co.com.parking.model.parking.config.ErrorDictionary;
 import co.com.parking.model.parking.gateways.ErrorDictionaryGateway;

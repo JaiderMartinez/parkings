@@ -18,8 +18,8 @@ public class ReserveSpace {
 
     private Long id;
     private Long idUser;
-    private LocalDateTime reservationStartDate;//tomo el espacio
-    private LocalDateTime reservationEndDate;//Desocupo el espacio de estacionamiento
+    private LocalDateTime reservationStartDate;
+    private LocalDateTime reservationEndDate;
     private double totalPayment;
     private ParkingSpace parkingSpace;
 

@@ -12,7 +12,7 @@ public class ParkingSpaceMapper {
         return ParkingSpace.builder()
                 .id(parkingSpaceEntity.getId())
                 .order(parkingSpaceEntity.getOrderNumber())
-                .active(parkingSpaceEntity.isActive())
+                .isActive(parkingSpaceEntity.isActive())
                 .locationX(parkingSpaceEntity.getLocationX())
                 .locationY(parkingSpaceEntity.getLocationY())
                 .isBusy(parkingSpaceEntity.isBusy())

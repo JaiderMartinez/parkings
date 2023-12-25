@@ -14,23 +14,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UseCasesConfig {
 
-        @Bean
-        public ParkingUseCase parkingUseCase(ParkingRepository parkingRepository) {
-                return new ParkingUseCase(parkingRepository);
-        }
+    @Bean
+    public ParkingUseCase parkingUseCase(ParkingRepository parkingRepository) {
+        return new ParkingUseCase(parkingRepository);
+    }
 
-        @Bean
-        public ReserveParkingSpaceUseCase reserveParkingSpaceUseCase(ParkingSpaceRepository parkingSpaceRepository,
-                                                                     ReserveSpaceInParkingRepository reserveSpaceInParkingRepository,
-                                                                     ParkingRepository parkingRepository,
-                                                                     UserGateway userGateway) {
-                return new ReserveParkingSpaceUseCase(
-                        parkingSpaceRepository,
-                        reserveSpaceInParkingRepository, parkingRepository, userGateway);
-        }
+    @Bean
+    public ReserveParkingSpaceUseCase reserveParkingSpaceUseCase(ParkingSpaceRepository parkingSpaceRepository,
+                                                                 ReserveSpaceInParkingRepository reserveSpaceInParkingRepository,
+                                                                 ParkingRepository parkingRepository,
+                                                                 UserGateway userGateway) {
+        return new ReserveParkingSpaceUseCase(
+                parkingSpaceRepository,
+                reserveSpaceInParkingRepository, parkingRepository, userGateway);
+    }
 
-        @Bean
-        public ErrorDictionaryUseCase errorDictionaryUseCase(ErrorDictionaryGateway errorDictionaryGateway) {
-                return new ErrorDictionaryUseCase(errorDictionaryGateway);
-        }
+    @Bean
+    public ErrorDictionaryUseCase errorDictionaryUseCase(ErrorDictionaryGateway errorDictionaryGateway) {
+        return new ErrorDictionaryUseCase(errorDictionaryGateway);
+    }
 }
