@@ -7,20 +7,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@Table(name = "parkings")
+@Table(name = "error_dictionary")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ParkingEntity {
+public class ErrorDictionaryEntity {
 
     @Id
-    private Long id;
-    private String name;
-    private double hourPrice;
-    private String address;
+    private String id;
+    private String messageEn;
+    private String messageEs;
+    private Integer httpStatus;
+    private String message;
 }
