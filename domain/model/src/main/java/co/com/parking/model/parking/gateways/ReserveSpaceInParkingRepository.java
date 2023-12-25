@@ -7,5 +7,5 @@ public interface ReserveSpaceInParkingRepository {
 
     Mono<ReserveSpace> save(ReserveSpace reserveSpace);
 
-    Mono<ReserveSpace> findByIdParkingAndIdUserAndReservationEndDateIsNull(Long idParking, Long idUser);
+    Mono<ReserveSpace> findOpenReservedSpace(Long idParking, Long idParkingSpace, Long idUser);
 }

@@ -1,4 +1,4 @@
-package co.com.parking.r2dbc;
+package co.com.parking.r2dbc.repository;
 
 import co.com.parking.model.parking.ReserveSpace;
 import co.com.parking.model.parking.gateways.ReserveSpaceInParkingRepository;
@@ -21,8 +21,8 @@ public class ReserveSpaceInParkingRepositoryImpl implements ReserveSpaceInParkin
     }
 
     @Override
-    public Mono<ReserveSpace> findByIdParkingAndIdUserAndReservationEndDateIsNull(Long idParking, Long idUser) {
-        return reserveSpaceDao.findByIdParkingAndIdUserAndReservationEndDateIsNull(idParking, idUser)
+    public Mono<ReserveSpace> findOpenReservedSpace(Long idParking, Long idParkingSpace, Long idUser) {
+        return reserveSpaceDao.findOpenReservedSpace(idParking, idParkingSpace, idUser)
                 .map(ReserveSpaceMapper::toModel);
     }
 }

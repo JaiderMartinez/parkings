@@ -22,12 +22,10 @@ management:
     health:
       probes:
         enabled: true
-cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8080"
 
 endpoint:
   micro:
-    user: ${MICRO_BASE_USER:http://localhost:8080}
+    user: ${MICRO_USER:http://localhost:8080}
 
 resilience:
   communication:

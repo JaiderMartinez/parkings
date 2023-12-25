@@ -8,7 +8,7 @@ public enum ErrorCode {
     B400000("B400-000", "Bad Request"),
     F404000("F404-000", "Not found"),
     C409000("C409-000", "Conflict"),
-    I500000("I500-000", "Internal Server");
+    B500000("B500-000", "Internal Server");
 
     private final String code;
     private final String log;

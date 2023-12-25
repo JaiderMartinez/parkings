@@ -1,4 +1,4 @@
-package co.com.parking.r2dbc;
+package co.com.parking.r2dbc.repository;
 
 import co.com.parking.model.parking.Parking;
 import co.com.parking.model.parking.gateways.ParkingRepository;

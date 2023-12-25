@@ -40,8 +40,9 @@ public class ReserveParkingSpaceController {
     @ResponseStatus(HttpStatus.OK)
     public Mono<ParkingSpaceReleaseResponseDto> freeUpParkingSpace(
             @PathVariable(name = "idParking") Long idParking,
+            @RequestParam(name = "idParkingSpace") Long idParkingSpace,
             @RequestParam(name = "idUser") Long idUser) {
-        return reserveParkingSpaceUseCase.freeUpParkingSpace(idParking, idUser)
+        return reserveParkingSpaceUseCase.freeUpParkingSpace(idParking, idParkingSpace, idUser)
                 .map(ParkingSpaceReservationDtoMapper::toParkingSpaceReleaseResponseDto);
     }
 }

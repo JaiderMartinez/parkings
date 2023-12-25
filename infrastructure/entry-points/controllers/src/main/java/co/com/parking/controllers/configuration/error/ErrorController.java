@@ -39,7 +39,7 @@ public class ErrorController {
                         .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .messageEs("Ha ocurrido un error en el sistema, por favor contacte al administrador")
                         .messageEn("An error has occurred in the system, please contact the administrator")
-                        .id("B500-000")
+                        .id(ErrorCode.B500000.getCode())
                         .build())
                 .map(errorDictionary -> getErrorEntity(errorDictionary, e));
     }
