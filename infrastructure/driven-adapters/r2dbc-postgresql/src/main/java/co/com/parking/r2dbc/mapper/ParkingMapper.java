@@ -13,6 +13,8 @@ public class ParkingMapper {
                 .name(parking.getName())
                 .hourPrice(parking.getHourPrice())
                 .address(parking.getAddress())
+                .latitude(parking.getLatitude())
+                .longitude(parking.getLongitude())
                 .build();
     }
 
@@ -22,6 +24,8 @@ public class ParkingMapper {
                 .name(parkingEntity.getName())
                 .hourPrice(parkingEntity.getHourPrice())
                 .address(parkingEntity.getAddress())
+                .latitude(parkingEntity.getLatitude())
+                .longitude(parkingEntity.getLongitude())
                 .build();
     }
 }

@@ -17,4 +17,6 @@ public class ParkingResponseDto {
     private String name;
     private double hourPrice;
     private String address;
+    private double latitude;
+    private double longitude;
 }

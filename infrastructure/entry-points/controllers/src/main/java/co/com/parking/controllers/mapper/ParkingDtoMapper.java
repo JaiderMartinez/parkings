@@ -14,6 +14,8 @@ public class ParkingDtoMapper {
                 .name(parking.getName())
                 .hourPrice(parking.getHourPrice())
                 .address(parking.getAddress())
+                .latitude(parking.getLatitude())
+                .longitude(parking.getLongitude())
                 .build();
     }
 
@@ -22,6 +24,8 @@ public class ParkingDtoMapper {
                 .address(parkingRequestDto.getAddress())
                 .name(parkingRequestDto.getName())
                 .hourPrice(parkingRequestDto.getHourPrice())
+                .latitude(parkingRequestDto.getLatitude())
+                .longitude(parkingRequestDto.getLongitude())
                 .build();
     }
 }

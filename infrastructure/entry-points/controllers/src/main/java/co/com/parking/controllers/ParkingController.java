@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,6 +30,13 @@ public class ParkingController {
     @PostMapping
     public Mono<ParkingResponseDto> save(@RequestBody ParkingRequestDto parkingRequestDto) {
         return parkingUseCase.save(ParkingDtoMapper.toModel(parkingRequestDto))
+                .map(ParkingDtoMapper::toResponseDto);
+    }
+
+    @GetMapping("/location")
+    public Flux<ParkingResponseDto> findByLocation(@RequestParam("latitude") double latitudeInDegrees,
+                                                   @RequestParam("longitude")  double longitudeInDegrees) {
+        return parkingUseCase.findByLocation(latitudeInDegrees, longitudeInDegrees)
                 .map(ParkingDtoMapper::toResponseDto);
     }
 }

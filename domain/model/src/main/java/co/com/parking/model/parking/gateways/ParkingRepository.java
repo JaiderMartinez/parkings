@@ -11,4 +11,6 @@ public interface ParkingRepository {
     Flux<Parking> findAll();
 
     Mono<Parking> findById(Long idParking);
+
+    Flux<Parking> findByLocation(double latitudeInRadians, double longitudeInRadians);
 }

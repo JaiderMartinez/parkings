@@ -23,4 +23,8 @@ public class ParkingUseCase {
     public Mono<Parking> save(Parking parking) {
         return parkingRepository.save(parking);
     }
+
+    public Flux<Parking> findByLocation(double latitudeInDegrees, double longitudeInDegrees) {
+        return parkingRepository.findByLocation(Math.toRadians(latitudeInDegrees), Math.toRadians(longitudeInDegrees));
+    }
 }
