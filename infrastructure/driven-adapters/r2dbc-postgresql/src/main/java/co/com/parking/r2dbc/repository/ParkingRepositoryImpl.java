@@ -16,7 +16,7 @@ public class ParkingRepositoryImpl implements ParkingRepository {
 
     private final ParkingDao parkingDao;
     @Value("${variable.limit.parkings}")
-    private String limitParkingsByLocation;
+    private String limitParkingLotsByLocation;
 
     @Override
     public Mono<Parking> save(Parking parking) {
@@ -37,7 +37,7 @@ public class ParkingRepositoryImpl implements ParkingRepository {
 
     @Override
     public Flux<Parking> findByLocation(double latitudeInRadians, double longitudeInRadians) {
-        return parkingDao.findByLocation(latitudeInRadians, longitudeInRadians, Integer.parseInt(limitParkingsByLocation))
+        return parkingDao.findByLocation(latitudeInRadians, longitudeInRadians, Integer.parseInt(limitParkingLotsByLocation))
                 .map(ParkingMapper::toModel);
     }
 }

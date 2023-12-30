@@ -42,9 +42,9 @@ class ReserveParkingSpaceUseCaseTest {
         Long idParking = 1L;
         Long idUser = 1L;
         Long idParkingSpace = 1L;
-        Parking parking = new Parking(idParking, "name", 1000.0, "address");
+        Parking parking = new Parking(idParking, "name", 1000.0, "address",-10, 10);
         ParkingSpace parkingSpaceExpected = new ParkingSpace(idParkingSpace, 1, true,
-                false, -10, 10, parking);
+                false, parking);
         User user = User.builder()
                 .id(idUser)
                 .build();
@@ -83,9 +83,9 @@ class ReserveParkingSpaceUseCaseTest {
         Long idParking = 1L;
         Long idUser = 1L;
         Long idParkingSpace = 1L;
-        Parking parking = new Parking(idParking, "name", 1000.0, "address");
+        Parking parking = new Parking(idParking, "name", 1000.0, "address", -10, 10);
         ParkingSpace parkingSpaceExpected = new ParkingSpace(idParkingSpace, 1, false,
-                false, -10, 10, parking);
+                false, parking);
         when(parkingSpaceRepository.findByIdParkingAndIdParkingSpace(idParking, idParkingSpace))
                 .thenReturn(Mono.just(parkingSpaceExpected));
         StepVerifier.create(reserveParkingSpaceUseCase.reserveParkingSpace(idParking, idUser, idParkingSpace))
@@ -98,9 +98,9 @@ class ReserveParkingSpaceUseCaseTest {
         Long idParking = 1L;
         Long idUser = 1L;
         Long idParkingSpace = 1L;
-        Parking parking = new Parking(idParking, "name", 1000.0, "address");
+        Parking parking = new Parking(idParking, "name", 1000.0, "address", -10, 10);
         ParkingSpace parkingSpaceExpected = new ParkingSpace(idParkingSpace, 1, true,
-                false, -10, 10, parking);
+                false, parking);
         when(parkingSpaceRepository.findByIdParkingAndIdParkingSpace(idParking, idParkingSpace))
                 .thenReturn(Mono.just(parkingSpaceExpected));
         when(parkingRepository.findById(idParking)).thenReturn(Mono.empty());
@@ -114,9 +114,9 @@ class ReserveParkingSpaceUseCaseTest {
         Long idParking = 1L;
         Long idUser = 1L;
         Long idParkingSpace = 1L;
-        Parking parking = new Parking(idParking, "name", 1000.0, "address");
+        Parking parking = new Parking(idParking, "name", 1000.0, "address", -10, 10);
         ParkingSpace parkingSpaceExpected = new ParkingSpace(idParkingSpace, 1, true,
-                false, -10, 10, parking);
+                false, parking);
         ReserveSpace reserveSpaceExpected = ReserveSpace.builder()
                 .id(1L)
                 .reservationStartDate(LocalDateTime.now())
@@ -182,9 +182,7 @@ class ReserveParkingSpaceUseCaseTest {
                 .id(idParkingSpace)
                 .order(1)
                 .isActive(true)
-                .isBusy(true)
-                .locationX(-10)
-                .locationY(10)
+                .isOccupied(true)
                 .build();
         ReserveSpace reserveSpaceExpected = ReserveSpace.builder()
                 .id(1L)

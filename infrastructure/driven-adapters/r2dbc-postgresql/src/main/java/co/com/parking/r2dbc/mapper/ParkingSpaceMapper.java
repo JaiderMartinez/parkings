@@ -13,9 +13,7 @@ public class ParkingSpaceMapper {
                 .id(parkingSpaceEntity.getId())
                 .order(parkingSpaceEntity.getOrderNumber())
                 .isActive(parkingSpaceEntity.isActive())
-                .locationX(parkingSpaceEntity.getLocationX())
-                .locationY(parkingSpaceEntity.getLocationY())
-                .isBusy(parkingSpaceEntity.isBusy())
+                .isOccupied(parkingSpaceEntity.isOccupied())
                 .parking(Parking.builder()
                         .id(parkingSpaceEntity.getIdParking())
                         .build())
@@ -27,9 +25,7 @@ public class ParkingSpaceMapper {
                 .id(parkingSpace.getId())
                 .orderNumber(parkingSpace.getOrder())
                 .active(parkingSpace.isActive())
-                .isBusy(parkingSpace.isBusy())
-                .locationX(parkingSpace.getLocationX())
-                .locationY(parkingSpace.getLocationY())
+                .isOccupied(parkingSpace.isOccupied())
                 .idParking(parkingSpace.getParking().getId())
                 .build();
     }

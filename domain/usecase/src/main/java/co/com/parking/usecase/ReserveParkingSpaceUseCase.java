@@ -38,7 +38,7 @@ public class ReserveParkingSpaceUseCase {
                 .flatMap(parkingSpace ->
                     getParking(idParking).flatMap(parking -> {
                         parkingSpace.setParking(parking);
-                        parkingSpace.setBusy(true);
+                        parkingSpace.setOccupied(true);
                         return saveParkingSpace(parkingSpace).thenReturn(parkingSpace);
                     })
                 )
@@ -55,7 +55,7 @@ public class ReserveParkingSpaceUseCase {
     }
 
     private Mono<ParkingSpace> validateParkingSpace(ParkingSpace parkingSpaceToTake) {
-        if (!parkingSpaceToTake.isActive() || parkingSpaceToTake.isBusy()) {
+        if (!parkingSpaceToTake.isActive() || parkingSpaceToTake.isOccupied()) {
             return Mono.error(new ParkingException(ErrorCode.C409000));
         }
         return Mono.just(parkingSpaceToTake);
@@ -97,7 +97,7 @@ public class ReserveParkingSpaceUseCase {
                 .flatMap(reserveSpace -> findParkingAndCalculateTotalToPay(reserveSpace, idParking))
                 .flatMap(reserveSpace -> saveReserveSpaceInParking(reserveSpace).thenReturn(reserveSpace))
                 .flatMap(reserveSpace -> {
-                    reserveSpace.getParkingSpace().setBusy(false);
+                    reserveSpace.getParkingSpace().setOccupied(false);
                     return saveParkingSpace(reserveSpace.getParkingSpace()).thenReturn(reserveSpace);
                 });
     }
