@@ -23,6 +23,9 @@ management:
       probes:
         enabled: true
 
+cors:
+  allowed-origins: "*"
+
 endpoint:
   micro:
     user: ${ENDPOINT_USER:http://localhost:8080}
