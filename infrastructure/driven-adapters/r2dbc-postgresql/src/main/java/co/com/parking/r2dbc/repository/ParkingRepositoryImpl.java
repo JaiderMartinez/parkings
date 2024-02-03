@@ -5,6 +5,7 @@ import co.com.parking.model.parking.gateways.ParkingRepository;
 import co.com.parking.r2dbc.dao.ParkingDao;
 import co.com.parking.r2dbc.mapper.ParkingMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,6 +15,8 @@ import reactor.core.publisher.Mono;
 public class ParkingRepositoryImpl implements ParkingRepository {
 
     private final ParkingDao parkingDao;
+    @Value("${variable.limit.parkings}")
+    private String limitParkingLotsByLocation;
 
     @Override
     public Mono<Parking> save(Parking parking) {
@@ -29,6 +32,12 @@ public class ParkingRepositoryImpl implements ParkingRepository {
     @Override
     public Mono<Parking> findById(Long idParking) {
         return parkingDao.findById(idParking)
+                .map(ParkingMapper::toModel);
+    }
+
+    @Override
+    public Flux<Parking> findByLocation(double latitudeInRadians, double longitudeInRadians) {
+        return parkingDao.findByLocation(latitudeInRadians, longitudeInRadians, Integer.parseInt(limitParkingLotsByLocation))
                 .map(ParkingMapper::toModel);
     }
 }

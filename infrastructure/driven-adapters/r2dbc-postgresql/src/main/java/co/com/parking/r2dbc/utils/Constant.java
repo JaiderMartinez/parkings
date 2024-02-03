@@ -15,4 +15,13 @@ public class Constant {
                     "AND reserve_space.id_parking_space = :idParkingSpace " +
                     "AND reserve_space.reservation_end_date IS NULL";
     public static final String PATH_GET_USER_BY_ID = "user/{idUser}";
+    private static final int EARTH_RADIO = 6371;
+    public static final String QUERY_FIND_PARKINGS_ORDER_BY_LOCATION_AND_WITH_LIMIT =
+                    "SELECT p.id, p.name, p.hour_price, p.address, p.latitude, p.longitude " +
+                            "FROM parkings p " +
+                            "ORDER BY " + EARTH_RADIO + " * 2 * ASIN(SQRT(" +
+                            "POWER(SIN((:latitudeInRadians - RADIANS(p.latitude)) / 2), 2) + " +
+                            "COS(:latitudeInRadians) * COS(RADIANS(p.latitude)) * " +
+                            "POWER(SIN((:longitudeInRadians - RADIANS(p.longitude)) / 2), 2))) " +
+                            "LIMIT :limit";
 }

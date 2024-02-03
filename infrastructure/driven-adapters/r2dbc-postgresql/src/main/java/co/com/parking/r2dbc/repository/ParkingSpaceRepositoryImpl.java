@@ -6,7 +6,6 @@ import co.com.parking.r2dbc.dao.ParkingSpaceDao;
 import co.com.parking.r2dbc.mapper.ParkingSpaceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -21,7 +20,6 @@ public class ParkingSpaceRepositoryImpl implements ParkingSpaceRepository {
                 .map(ParkingSpaceMapper::toModel);
     }
 
-    @Transactional
     @Override
     public Mono<ParkingSpace> save(ParkingSpace parkingSpace) {
         return parkingSpaceDao.save( ParkingSpaceMapper.toEntity(parkingSpace) )

@@ -16,8 +16,6 @@ public class ParkingSpace {
     private Long id;
     private Integer order;
     private boolean isActive;
-    private boolean isBusy;
-    private Integer locationX;
-    private Integer locationY;
+    private boolean isOccupied;
     private Parking parking;
 }

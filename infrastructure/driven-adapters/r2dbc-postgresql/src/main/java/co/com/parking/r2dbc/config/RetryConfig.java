@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "resilience.communication")
 public class RetryConfig {
 
-    private long maxAttempts;
-    private long backoffInterval;
+    private int maxAttempts;
+    private int backoffInterval;
 }

@@ -25,7 +25,12 @@ management:
 
 endpoint:
   micro:
-    user: ${MICRO_USER:http://localhost:8080}
+    user: ${ENDPOINT_USER:http://localhost:8080}
+
+variable:
+  limit:
+    parkings: ${LIMIT_PARKINGS_BY_LOCATION:2}
+
 
 resilience:
   communication:
