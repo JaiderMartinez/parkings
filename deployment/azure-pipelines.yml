@@ -1,0 +1,46 @@
+trigger:
+  - develop
+  - master
+  - feature/pipeline
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: version_image
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
+      value: 1.0-SNATSHOP
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/feature/pipeline') }} :
+      value: 1.0-SNATSHOP
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
+      value: latest
+  - name: var_profile
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
+      value: dev
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/feature/pipeline') }} :
+      value: dev
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
+      value: prod
+
+steps:
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.17'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: true
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'build'
+
+  - task: Docker@2
+    inputs:
+      command: 'buildAndPush'
+      repository: 'jaider18/users-parking'
+      containerRegistry: 'docker_auth'
+      Dockerfile: 'deployment/Dockerfile'
+      buildContext: 'deployment'
+      tags: '${{ variables.version_image }}'
+      arguments: '--build-arg VAR_PROFILE=${{ variables.var_profile }}'
