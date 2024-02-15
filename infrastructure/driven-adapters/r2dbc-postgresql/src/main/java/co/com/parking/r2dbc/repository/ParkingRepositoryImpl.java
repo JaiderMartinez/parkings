@@ -4,19 +4,23 @@ import co.com.parking.model.parking.Parking;
 import co.com.parking.model.parking.gateways.ParkingRepository;
 import co.com.parking.r2dbc.dao.ParkingDao;
 import co.com.parking.r2dbc.mapper.ParkingMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-@RequiredArgsConstructor
 public class ParkingRepositoryImpl implements ParkingRepository {
 
     private final ParkingDao parkingDao;
-    @Value("${variable.limit.parkings}")
-    private String limitParkingLotsByLocation;
+    private final String limitParkingLotsByLocation;
+
+    public ParkingRepositoryImpl(@Value("${variable.limit.parkings}")
+                                 String limitParkingLotsByLocation,
+                                 ParkingDao parkingDao) {
+        this.parkingDao = parkingDao;
+        this.limitParkingLotsByLocation = limitParkingLotsByLocation;
+    }
 
     @Override
     public Mono<Parking> save(Parking parking) {
