@@ -1,3 +1,8 @@
+# Gradle
+# Build your Java project and run tests with Gradle using a Gradle wrapper script.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
 trigger:
   - develop
   - master
@@ -38,9 +43,9 @@ steps:
   - task: Docker@2
     inputs:
       command: 'buildAndPush'
-      repository: 'jaider18/users-parking'
+      repository: 'jaider18/parking'
       containerRegistry: 'docker_auth'
       Dockerfile: 'deployment/Dockerfile'
-      buildContext: 'deployment'
+      buildContext: './'
       tags: '${{ variables.version_image }}'
       arguments: '--build-arg VAR_PROFILE=${{ variables.var_profile }}'
