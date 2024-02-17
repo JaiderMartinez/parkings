@@ -28,7 +28,7 @@ class ErrorDictionaryRepositoryImplTest {
         StepVerifier.create(errorDictionaryRepository.findById(codeError))
                 .expectNextMatches(errorDictionaryResult -> errorDictionaryResult.getId().equals(codeError) &&
                         errorDictionaryResult.getMessage().equals(errorDictionary.getMessage()) &&
-                        errorDictionaryResult.getHttpStatus().equals(errorDictionary.getHttpStatus()) &&
+                        errorDictionaryResult.getStatusCode().equals(errorDictionary.getHttpStatus()) &&
                         errorDictionaryResult.getMessageEn().equals(errorDictionary.getMessageEn()) &&
                         errorDictionaryResult.getMessageEs().equals(errorDictionary.getMessageEs()))
                 .expectComplete()

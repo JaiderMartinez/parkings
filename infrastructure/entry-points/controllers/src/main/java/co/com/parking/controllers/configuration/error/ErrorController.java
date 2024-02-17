@@ -50,7 +50,7 @@ public class ErrorController implements ErrorWebExceptionHandler {
 
     private ErrorDictionary getDefaultErrorDictionary() {
         return ErrorDictionary.builder()
-                .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .messageEs(Constant.MESSAGE_ES_ERROR_DEFAULT)
                 .messageEn(Constant.MESSAGE_EN_ERROR_DEFAULT)
                 .id("B500-000")
@@ -58,7 +58,7 @@ public class ErrorController implements ErrorWebExceptionHandler {
     }
 
     private ResponseEntity<ResponseErrorDto> getErrorEntity(ErrorDictionary errorDictionary, Exception e) {
-        return ResponseEntity.status(errorDictionary.getHttpStatus())
+        return ResponseEntity.status(errorDictionary.getStatusCode())
                 .headers(getHeaders(e.getMessage()))
                 .body(ResponseErrorMapper.toResponseErrorDto(errorDictionary));
     }

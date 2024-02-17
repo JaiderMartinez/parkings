@@ -16,6 +16,6 @@ public class ErrorDictionary {
     private String id;
     private String messageEn;
     private String messageEs;
-    private Integer httpStatus;
+    private Integer statusCode;
     private String message;
 }

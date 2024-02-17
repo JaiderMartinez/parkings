@@ -10,7 +10,7 @@ public class ErrorDictionaryMapper {
     public static ErrorDictionary toModel(ErrorDictionaryEntity errorDictionaryEntity) {
         return ErrorDictionary.builder()
                 .id(errorDictionaryEntity.getId())
-                .httpStatus(errorDictionaryEntity.getHttpStatus())
+                .statusCode(errorDictionaryEntity.getHttpStatus())
                 .message(errorDictionaryEntity.getMessage())
                 .messageEn(errorDictionaryEntity.getMessageEn())
                 .messageEs(errorDictionaryEntity.getMessageEs())

@@ -26,7 +26,7 @@ class ErrorDictionaryUseCaseTest {
         String codeError = ErrorCode.B400000.getCode();
         ErrorDictionary errorDictionaryExpected = ErrorDictionary.builder()
                 .id(codeError)
-                .httpStatus(400)
+                .statusCode(400)
                 .messageEn("Bad request")
                 .messageEs("Mala peticion")
                 .message(ErrorCode.B400000.getLog())
