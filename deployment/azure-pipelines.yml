@@ -39,10 +39,7 @@ steps:
         sonar.modules=applications/app-service,infrastructure/entry-points/controllers,domain/model,infrastructure/driven-adapters/r2dbc-postgresql,domain/usecase
         sonar.sources=src,deployment,settings.gradle,main.gradle,build.gradle,applications/app-service/build.gradle,infrastructure/entry-points/controllers/build.gradle,domain/model/build.gradle,infrastructure/driven-adapters/r2dbc-postgresql/build.gradle,domain/usecase/build.gradle
         sonar.exclusions=**/MainApplication.java
-        sonar.java.coveragePlugin=jacoco
-        sonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco.xml
-        sonar.junit.reportsPath=**/TEST-*.xml
-        sonar.test=**/src/test
+        sonar.test=src/test
 
   - task: Gradle@2
     inputs:
