@@ -1,0 +1,71 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespaces }}
+  labels:
+    app: {{ .Values.name }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8090"
+    prometheus.io/path: "/actuator/prometheus/"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: {{ .Values.name }}
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      containers:
+        - name: {{ .Values.name }}
+          image: '{{ .Values.image.name }}:{{ .Values.image.tag }}'
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "400Mi"
+              cpu: "100m"
+            limits:
+              memory: "500Mi"
+              cpu: "200m"
+          env:
+            - name: PROFILE
+              value: {{ .Values.profile }}
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: parking-secret
+                  key: datasource.username
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: parking-secret
+                  key: datasource.password
+            - name: DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: parking-secret
+                  key: datasource.url
+            - name: ENDPOINT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: parking-secret
+                  key: endpoint.user
+            - name: NAME_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: parking-config
+                  key: name.database
+            - name: LIMIT_PARKINGS_BY_LOCATION
+              valueFrom:
+                configMapKeyRef:
+                  name: parking-config
+                  key: variable.limit.parkings.by.location
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      securityContext: { }

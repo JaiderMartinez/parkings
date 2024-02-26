@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: {{ .Values.namespaces }}
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: user-api
+                port:
+                  number: 8081
+            path: /api/users(/|$)(.*)
+            pathType: Prefix
+          - backend:
+              service:
+                name: parking-api
+                port:
+                  number: 8090
+            path: /api/parkings(/|$)(.*)
+            pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+      - hostname: a08df1ea4bc434b9d8af04288d364184-3ae31dd103cfe58e.elb.us-east-1.amazonaws.com

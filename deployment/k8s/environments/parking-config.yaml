@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: parking-config
+  namespace: parking-develop
+data:
+  variable.limit.parkings.by.location: '20'
+  name.database: 'parkings'

@@ -1,0 +1,8 @@
+name: 'parking-api'
+namespaces: 'parking-develop'
+profile: dev
+servers:
+  port: '8090'
+image:
+  name: 'jaider18/parking'
+  tag: 'latest'
