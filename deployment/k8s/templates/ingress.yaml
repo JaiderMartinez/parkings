@@ -1,5 +1,5 @@
-apiVersion: v1
 kind: Ingress
+apiVersion: networking.k8s.io/v1
 metadata:
   name: ingress
   namespace: {{ .Values.namespaces }}
@@ -21,7 +21,7 @@ spec:
                   number: 8090
             path: /api/parkings(/|$)(.*)
             pathType: Prefix
-status:
-  loadBalancer:
-    ingress:
-      - hostname: a08df1ea4bc434b9d8af04288d364184-3ae31dd103cfe58e.elb.us-east-1.amazonaws.com
+#status:
+#  loadBalancer:
+#    ingress:
+#      - hostname: 11.elb.us-east-1.amazonaws.com

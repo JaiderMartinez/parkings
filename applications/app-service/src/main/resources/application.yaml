@@ -1,7 +1,16 @@
 server:
   port: 8090
 spring:
+  codec:
+    max-in-memory-size: 100MB
   application:
     name: PARKING
   profiles:
     active: dev
+
+logging:
+  level:
+    co.com.parking.controllers: TRACE
+    org.springframework.security: DEBUG
+    #org.springframework.r2dbc.core: DEBUG
+    #io.r2dbc.postgresql: DEBUG

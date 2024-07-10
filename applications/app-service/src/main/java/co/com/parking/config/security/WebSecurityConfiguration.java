@@ -27,6 +27,7 @@ public class WebSecurityConfiguration {
                 .logout(ServerHttpSecurity.LogoutSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(Constant.PATH_SWAGGER).permitAll()
+                        .pathMatchers("/actuator/health", "/actuator/info", "/actuator/**", "/actuator/prometheus").permitAll()
                         .anyExchange().authenticated()
                 )
                 .addFilterAfter(jwtFilter, SecurityWebFiltersOrder.FIRST)

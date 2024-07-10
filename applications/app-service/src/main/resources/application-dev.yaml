@@ -2,8 +2,8 @@ spring:
   r2dbc:
     name: ${NAME_DATABASE:parking}
     username: ${DATASOURCE_USERNAME:root}
-    password: ${DATASOURCE_PASSWORD:jaider18}
-    url: ${DATASOURCE_URL:r2dbc:postgresql://parking.ciusywni3ifc.us-east-1.rds.amazonaws.com:5432/parking?sslmode=require}
+    password: ${DATASOURCE_PASSWORD:12345}
+    url: ${DATASOURCE_URL:r2dbc:postgresql://localhost:5433/postgres}
     #pool:
       #max-size: 10
       #max-acquire-time: 10s
@@ -11,11 +11,12 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,prometheus"
+        include: "health,info,prometheus"
   endpoint:
     health:
       probes:
         enabled: true
+      show-details: always
 
 cors:
   allowed-origins: "*"
